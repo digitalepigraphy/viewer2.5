@@ -1,0 +1,456 @@
+<?xml version="1.0"?>
+<field_groups>
+	<field_group>
+		<id>1</id>
+		<name>ID Numbers</name>
+		<ord>1</ord>
+		<field>
+			<id>1</id>
+			<name>CIL Number</name>
+			<description></description>
+			<example></example>
+			<type_id>0</type_id>
+			<ord>8</ord>
+		</field>
+		<field>
+			<id>2</id>
+			<name>IG Number</name>
+			<description></description>
+			<example></example>
+			<type_id>0</type_id>
+			<ord>31</ord>
+		</field>
+		<field>
+			<id>28</id>
+			<name>Metropolitan Museum of Art ID</name>
+			<description>Accession Number</description>
+			<example>07.286.111</example>
+			<type_id>0</type_id>
+			<ord>29</ord>
+		</field>
+		<field>
+			<id>29</id>
+			<name>metmuseum.org ID</name>
+			<description>on-line catalog ID</description>
+			<example>130008463</example>
+			<type_id>0</type_id>
+			<ord>42</ord>
+		</field>
+		<field>
+			<id>42</id>
+			<name>Tampa Museum of Art ID</name>
+			<description>Accession Number</description>
+			<example>07.286.111</example>
+			<type_id>0</type_id>
+			<ord>43</ord>
+		</field>
+		<field>
+			<id>47</id>
+			<name>Accession ID Number</name>
+			<description>Accession number in the catalog of the museum.</description>
+			<example>8626.111</example>
+			<type_id>0</type_id>
+			<ord>47</ord>
+		</field>
+	</field_group>
+	<field_group>
+		<id>2</id>
+		<name>Locations</name>
+		<ord>2</ord>
+		<field>
+			<id>3</id>
+			<name>Province</name>
+			<description></description>
+			<example></example>
+			<type_id>0</type_id>
+			<ord>26</ord>
+		</field>
+		<field>
+			<id>4</id>
+			<name>Find spot (ancient name)</name>
+			<description></description>
+			<example></example>
+			<type_id>0</type_id>
+			<ord>30</ord>
+		</field>
+		<field>
+			<id>5</id>
+			<name>Modern country</name>
+			<description></description>
+			<example></example>
+			<type_id>0</type_id>
+			<ord>27</ord>
+		</field>
+		<field>
+			<id>6</id>
+			<name>Find spot (modern name)</name>
+			<description></description>
+			<example></example>
+			<type_id>0</type_id>
+			<ord>14</ord>
+		</field>
+		<field>
+			<id>7</id>
+			<name>Present location</name>
+			<description></description>
+			<example></example>
+			<type_id>0</type_id>
+			<ord>20</ord>
+		</field>
+		<field>
+			<id>52</id>
+			<name>Folder</name>
+			<description></description>
+			<example></example>
+			<type_id>0</type_id>
+			<ord>52</ord>
+		</field>
+	</field_group>
+	<field_group>
+		<id>3</id>
+		<name>Dates</name>
+		<ord>3</ord>
+		<field>
+			<id>8</id>
+			<name>Date</name>
+			<description></description>
+			<example></example>
+			<type_id>0</type_id>
+			<ord>3</ord>
+		</field>
+		<field>
+			<id>30</id>
+			<name>Period</name>
+			<description>Hellenistic</description>
+			<example></example>
+			<type_id>0</type_id>
+			<ord>4</ord>
+		</field>
+		<field>
+			<id>9</id>
+			<name>Year of find</name>
+			<description></description>
+			<example></example>
+			<type_id>0</type_id>
+			<ord>9</ord>
+		</field>
+	</field_group>
+	<field_group>
+		<id>4</id>
+		<name>Physical Description</name>
+		<ord>4</ord>
+		<field>
+			<id>10</id>
+			<name>State of preservation</name>
+			<description></description>
+			<example></example>
+			<type_id>0</type_id>
+			<ord>10</ord>
+		</field>
+		<field>
+			<id>11</id>
+			<name>Height</name>
+			<description></description>
+			<example></example>
+			<type_id>0</type_id>
+			<ord>18</ord>
+		</field>
+		<field>
+			<id>12</id>
+			<name>Width</name>
+			<description></description>
+			<example></example>
+			<type_id>0</type_id>
+			<ord>17</ord>
+		</field>
+		<field>
+			<id>13</id>
+			<name>Depth</name>
+			<description></description>
+			<example></example>
+			<type_id>0</type_id>
+			<ord>19</ord>
+		</field>
+		<field>
+			<id>14</id>
+			<name>Material</name>
+			<description></description>
+			<example></example>
+			<type_id>0</type_id>
+			<ord>13</ord>
+		</field>
+		<field>
+			<id>15</id>
+			<name>Inscription bearer</name>
+			<description></description>
+			<example></example>
+			<type_id>0</type_id>
+			<ord>15</ord>
+		</field>
+		<field>
+			<id>16</id>
+			<name>Letter height</name>
+			<description></description>
+			<example></example>
+			<type_id>0</type_id>
+			<ord>16</ord>
+		</field>
+		<field>
+			<id>17</id>
+			<name>Letter width</name>
+			<description></description>
+			<example></example>
+			<type_id>0</type_id>
+			<ord>7</ord>
+		</field>
+	</field_group>
+	<field_group>
+		<id>5</id>
+		<name>Text Description</name>
+		<ord>5</ord>
+		<field>
+			<id>18</id>
+			<name>Inscription type</name>
+			<description></description>
+			<example>Funereal, Dedicatory</example>
+			<type_id>0</type_id>
+			<ord>11</ord>
+		</field>
+		<field>
+			<id>46</id>
+			<name>Text</name>
+			<description></description>
+			<example>SIGILLVM: CIVIVM: RILB NSIVM</example>
+			<type_id>0</type_id>
+			<ord>44</ord>
+		</field>
+		<field>
+			<id>19</id>
+			<name>Language</name>
+			<description></description>
+			<example></example>
+			<type_id>0</type_id>
+			<ord>12</ord>
+		</field>
+	</field_group>
+	<field_group>
+		<id>6</id>
+		<name>Bibliography</name>
+		<ord>6</ord>
+		<field>
+			<id>20</id>
+			<name>Publication</name>
+			<description></description>
+			<example></example>
+			<type_id>0</type_id>
+			<ord>6</ord>
+		</field>
+		<field>
+			<id>21</id>
+			<name>Title</name>
+			<description></description>
+			<example></example>
+			<type_id>0</type_id>
+			<ord>21</ord>
+		</field>
+		<field>
+			<id>22</id>
+			<name>Author(s)</name>
+			<description></description>
+			<example></example>
+			<type_id>0</type_id>
+			<ord>22</ord>
+		</field>
+		<field>
+			<id>23</id>
+			<name>Volume</name>
+			<description></description>
+			<example></example>
+			<type_id>0</type_id>
+			<ord>23</ord>
+		</field>
+		<field>
+			<id>38</id>
+			<name>Number</name>
+			<description></description>
+			<example></example>
+			<type_id>0</type_id>
+			<ord>38</ord>
+		</field>
+		<field>
+			<id>39</id>
+			<name>Pages</name>
+			<description></description>
+			<example></example>
+			<type_id>0</type_id>
+			<ord>39</ord>
+		</field>
+		<field>
+			<id>40</id>
+			<name>Publisher</name>
+			<description></description>
+			<example></example>
+			<type_id>0</type_id>
+			<ord>40</ord>
+		</field>
+		<field>
+			<id>24</id>
+			<name>Year</name>
+			<description></description>
+			<example></example>
+			<type_id>0</type_id>
+			<ord>24</ord>
+		</field>
+	</field_group>
+	<field_group>
+		<id>7</id>
+		<name>General</name>
+		<ord>7</ord>
+		<field>
+			<id>26</id>
+			<name>Title</name>
+			<description></description>
+			<example>The title of the object</example>
+			<type_id>0</type_id>
+			<ord>1</ord>
+		</field>
+		<field>
+			<id>50</id>
+			<name>Version</name>
+			<description>Document version</description>
+			<example>3</example>
+			<type_id>0</type_id>
+			<ord>50</ord>
+		</field>
+		<field>
+			<id>27</id>
+			<name>Description</name>
+			<description></description>
+			<example>A paragraph that describes the object</example>
+			<type_id>0</type_id>
+			<ord>2</ord>
+		</field>
+		<field>
+			<id>31</id>
+			<name>Culture</name>
+			<description>Greek</description>
+			<example></example>
+			<type_id>0</type_id>
+			<ord>5</ord>
+		</field>
+		<field>
+			<id>43</id>
+			<name>Credit</name>
+			<description>Donation credit</description>
+			<example></example>
+			<type_id>0</type_id>
+			<ord>28</ord>
+		</field>
+		<field>
+			<id>44</id>
+			<name>Principal Investigator</name>
+			<description>The name of the person who is responsible for this object.</description>
+			<example>Robert S. Wagman</example>
+			<type_id>0</type_id>
+			<ord>46</ord>
+		</field>
+	</field_group>
+	<field_group>
+		<id>8</id>
+		<name>Digital</name>
+		<ord>8</ord>
+		<field>
+			<id>32</id>
+			<name>Scanner</name>
+			<description></description>
+			<example>Artec MHT</example>
+			<type_id>0</type_id>
+			<ord>32</ord>
+		</field>
+		<field>
+			<id>33</id>
+			<name>DPI</name>
+			<description>Dots per inch</description>
+			<example>300</example>
+			<type_id>0</type_id>
+			<ord>37</ord>
+		</field>
+		<field>
+			<id>51</id>
+			<name>DPI shown</name>
+			<description>Dots per inch</description>
+			<example>300</example>
+			<type_id>0</type_id>
+			<ord>51</ord>
+		</field>
+		<field>
+			<id>34</id>
+			<name>Width</name>
+			<description>Width of digital representation in pixels</description>
+			<example>640</example>
+			<type_id>0</type_id>
+			<ord>34</ord>
+		</field>
+		<field>
+			<id>35</id>
+			<name>Height</name>
+			<description>Height of digital representation in pixels</description>
+			<example>480</example>
+			<type_id>0</type_id>
+			<ord>35</ord>
+		</field>
+		<field>
+			<id>36</id>
+			<name>Polygons</name>
+			<description>Number of polygons of digital representation</description>
+			<example>133482</example>
+			<type_id>0</type_id>
+			<ord>36</ord>
+		</field>
+		<field>
+			<id>37</id>
+			<name>Vertices</name>
+			<description>Number of vertices of digital representation</description>
+			<example>33482</example>
+			<type_id>0</type_id>
+			<ord>33</ord>
+		</field>
+		<field>
+			<id>45</id>
+			<name>Digitized by</name>
+			<description>The name of the person who digitized the object.</description>
+			<example>Eleni Bozia</example>
+			<type_id>0</type_id>
+			<ord>45</ord>
+		</field>
+		<field>
+			<id>48</id>
+			<name>Light Direction</name>
+			<description>A unit vector of the direction of the light</description>
+			<example>0,1,0</example>
+			<type_id>0</type_id>
+			<ord>48</ord>
+		</field>
+		<field>
+			<id>49</id>
+			<name>Depth Range</name>
+			<description>The range of depth in pixel units.</description>
+			<example>300</example>
+			<type_id>0</type_id>
+			<ord>49</ord>
+		</field>
+	</field_group>
+	<field_group>
+		<id>9</id>
+		<name>Editorial</name>
+		<ord>9</ord>
+		<field>
+			<id>41</id>
+			<name>Name</name>
+			<description></description>
+			<example>Angelos Barmpoutis</example>
+			<type_id>0</type_id>
+			<ord>41</ord>
+		</field>
+	</field_group>
+</field_groups>

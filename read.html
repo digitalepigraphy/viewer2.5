@@ -1,0 +1,25 @@
+<html><head><meta http-equiv="content-type" content="text/html; charset=ISO-8859-1"><link rel='shortcut icon' href='img/favicon.ico' /><link rel="stylesheet" type="text/css" href="record.css" /><script type="text/javascript" src="js/dea-db-2.5.js"></script>
+</head>
+<body onload="" topmargin="0" leftmargin="0" bottommargin="0" rightmargin="0"><script>
+	
+	const params = new URLSearchParams(window.location.search);
+
+let recordID = null;
+let pathID = null;
+
+if (params.has('object')) {
+    recordID = params.get('object');
+    pathID = 'objects';
+} else if (params.has('heightmap')) {
+    recordID = params.get('heightmap');
+    pathID = 'heightmaps';
+} else if (params.has('image')) {
+    recordID = params.get('image');
+    pathID = 'images';
+} else if (params.has('link')) {
+    recordID = params.get('link');
+    pathID = 'links';
+}
+
+
+	loadDEA("//digitalepigraphy.github.io/",recordID);dea_view.setMode(0);dea_view.print();</script></body></html>

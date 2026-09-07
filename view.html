@@ -1,0 +1,47 @@
+<html><head><meta http-equiv="content-type" content="text/html; charset=ISO-8859-1"><link rel='shortcut icon' href='img/favicon.ico' /><script type="text/javascript" src="js/glMatrix-0.9.5.min.js"></script><script type="text/javascript" src="js/webgl-utils.js"></script>
+
+<script type="text/javascript" >
+
+function start(){
+	const params = new URLSearchParams(window.location.search);
+
+	let path;
+	let rid;
+	let fullscreen = "";
+
+	if (params.has("heightmap")) {
+		path = "heightmaps";
+		rid = params.get("heightmap");
+	} 
+	else if (params.has("object")) {
+		path = "objects";
+		rid = params.get("object");
+	}
+
+	if (params.has("fullscreen")) {
+		fullscreen = params.get("fullscreen");
+	} else {
+		fullscreen = 0;
+	}
+
+	if (fullscreen == 1) {
+		fullscreen = true;
+	} else {
+		fullscreen = false;
+	}
+	webGLStart("//digitalepigraphy.github.io/",rid,fullscreen);
+}
+
+</script>
+
+<script type="text/javascript" src="js/webgl-lib-2.0.js"></script><script type="text/javascript" src="js/webgl-dea-2.8.js"></script>
+
+
+<script type="text/javascript" src="js/dea-db-2.5.js"></script><script type="text/javascript"></script></head>
+ 
+<body onload="start();" topmargin="0" leftmargin="0" bottommargin="0" rightmargin="0" >
+
+
+
+<canvas id="inscription-canvas" style="border: none;touch-action:none;"></canvas><div id="error-message"></div></body></html>
+
