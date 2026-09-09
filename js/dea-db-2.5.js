@@ -360,9 +360,11 @@ c_value = unescape(c_value.substring(c_start,c_end));
 return c_value;
 }
 
-function DEArecord(p,i) //Constructor
+function DEArecord(p,i,x,t) //Constructor
 {
 	this.path=p;
+	this.type=t;
+	this.filename="";
 	if(typeof i !== 'undefined')
 	{
 		this.id=i;
@@ -375,7 +377,14 @@ function DEArecord(p,i) //Constructor
 		var p_=p.substring(0,p.indexOf("/Info.xml"));
 		this.path=p_.substring(0,p_.indexOf("/",2)+1);
 		this.id=p_.substring(p.indexOf("/",2)+1);
+		this.filename="Info.xml";
+		this.type="heightmap";
 	}
+
+	if(typeof x !== 'undefined'){
+		this.filename=x;
+	}
+
 	this.entries=[];
 	this.record_links=[];
 	this.neobject_grandparent=null;
@@ -428,6 +437,7 @@ DEArecord.prototype.handleLoadedFile=function(data,asynchronous,quickload)
 		console.log("NULL XML DATA received from "+this.id+" broken xml file?");
 		return;
 	}
+	
 	//log("ProcessLoaded: "+this.id+" "+this.aux+" "+this.stamp);
 	var num_of_items=data.getElementsByTagName("field").length;
 	for(var i=0;i<num_of_items;i++)
@@ -496,11 +506,13 @@ DEArecord.prototype.handleLoadedFile=function(data,asynchronous,quickload)
 		}
 		else if(record_link.getAttribute("type")=="neobject")
 		{  
-			this.record_links[i]=new DEArecord("neobjects",record_link.getAttribute("value"));
+			//this.record_links[i]=new DEArecord("neobject",record_link.getAttribute("value"));
+			this.record_links[i]=new DEArecord(this.path,this.id,record_link.getAttribute("value"),"neobject");
+		
 		}
 		else if(record_link.getAttribute("type")=="heightmap")
 		{  
-			this.record_links[i]=new DEArecord("heightmaps",record_link.getAttribute("value"));
+			this.record_links[i]=new DEArecord(this.path,this.id,record_link.getAttribute("value"),"heightmap");
 		}
 		else if(record_link.getAttribute("type")=="image")
 		{  
@@ -602,8 +614,8 @@ DEArecord.prototype.load=function(asynchronous,quickload)
 		}
 		if(quickload || xmlhttp.responseXML==null)*/
 		{
-			if(quickload) xmlhttp.open("GET",dea_host+this.path+this.id+"/Info.xml",asynchronous);
-			else xmlhttp.open("GET",dea_host+this.path+this.id+"/Info.xml"+"?"+(new Date()).getTime(),asynchronous);
+			if(quickload) xmlhttp.open("GET",dea_host+this.path+this.id+"/"+this.filename,asynchronous);
+			else xmlhttp.open("GET",dea_host+this.path+this.id+"/"+this.filename+"?"+(new Date()).getTime(),asynchronous);
 			xmlhttp.send();	
 		}
 		this.handleLoadedFile(xmlhttp.responseXML,false,quickload);
@@ -618,7 +630,8 @@ DEArecord.prototype.loadNEOlinks=function(quickload)
 	
 	for(var i=0;i<this.record_links.length;i++)
 	{
-		if(this.record_links[i].path=="neobjects")
+			
+		if(this.record_links[i].type=="neobject")
 		{
 			this.record_links[i].load(false,quickload);
 			
@@ -626,7 +639,7 @@ DEArecord.prototype.loadNEOlinks=function(quickload)
 			{
 			    for(var j=0;j<this.record_links[i].record_links.length && this.neobject_grandparent==null;j++)
 				{
-					if(this.record_links[i].record_links[j].path=="neobjects")
+					if(this.record_links[i].record_links[j].type=="neobject")
 					{
 						this.neobject_grandparent=this.record_links[i].record_links[j];
 						this.neobject_grandparent.load(false,quickload);
@@ -710,11 +723,11 @@ DEArecord.prototype.getTitle=function()
      if(t.length>0) return t;
      else
      {
-	if(this.path=="objects") t="Digital 3D object";
-	else if(this.path=="heightmaps") t="Digital heightmap";
-	else if(this.path=="images") t="Digital image";
-	else if(this.path=="links") t="External digital resource";
-	else if(this.path=="neobjects") t="Physical object";
+	if(this.type=="object") t="Digital 3D object";
+	else if(this.type=="heightmap") t="Digital heightmap";
+	else if(this.type=="image") t="Digital image";
+	else if(this.type=="link") t="External digital resource";
+	else if(this.type=="neobject") t="Physical object";
 	else t="Digital heightmap";
        return t;
      }
@@ -883,7 +896,7 @@ DEArecord.prototype.sprintKeywords=function(keys,hide)
 	
 	for(var i=0;i<this.record_links.length;i++)
 	{
-		if(this.record_links[i].path=="neobjects" && this.path!="neobjects")
+		if(this.record_links[i].type=="neobject" && this.type!="neobject")
 		{
 			out+=this.record_links[i].sprintKeywords(keys,hide);
 		}
@@ -976,7 +989,7 @@ DEArecord.prototype.sprintPlain=function()
 	
 	for(var i=0;i<this.record_links.length;i++)
 	{
-		if(this.record_links[i].path=="neobjects")
+		if(this.record_links[i].type=="neobject")
 		{
 			out+=this.record_links[i].sprintPlain();
 		}
@@ -997,7 +1010,7 @@ DEArecord.prototype.sprintPlainHTML=function()
 	
 	for(var i=0;i<this.record_links.length;i++)
 	{
-		if(this.record_links[i].path=="neobjects")
+		if(this.record_links[i].type=="neobject")
 		{
 			out+=this.record_links[i].sprintPlain();
 		}
@@ -1018,7 +1031,7 @@ DEArecord.prototype.printNEOlinks=function(view)
 	var out="";
 	for(var i=0;i<this.record_links.length;i++)
 	{
-		if(this.record_links[i].path=="neobjects")
+		if(this.record_links[i].type=="neobject")
 		{
 			out+=this.record_links[i].sprint(view);
 		}
@@ -1049,7 +1062,7 @@ DEArecord.prototype.collectLinkedObjects=function(view)
 {
 	for(var i=0;i<this.record_links.length;i++)
 	{
-		if(this.record_links[i].path.length>0 && this.record_links[i].id.length>0 && this.record_links[i].path!="neobjects" && view.dea_record.id!=this.record_links[i].id)
+		if(this.record_links[i].path.length>0 && this.record_links[i].id.length>0 && this.record_links[i].type!="neobject" && view.dea_record.id!=this.record_links[i].id)
 		{
 			var found=-1;
 			for(var j=0;(j<view.linked_objects.length) && (found==-1);j++)
@@ -1082,7 +1095,7 @@ DEAview.prototype.editResources=function(value)
 
 DEAview.prototype.load=function(path,rid)
 {
-   this.dea_record=new DEArecord(path,rid);
+   this.dea_record=new DEArecord(path,rid,"Info.xml","heightmap");
    this.dea_record.load();
    this.dea_record.loadNEOlinks();
    this.setMode(this.mode);
