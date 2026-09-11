@@ -36,8 +36,9 @@ def parse_reference(
     reference: ET.Element,
     record_directory: Path,
     field_names: dict[str, str],
+    registry: dict[str, dict[str, Any]],
 ) -> dict[str, Any]:
-    """Parse a source/editor element and its referenced Info.xml, if present."""
+    """Return a compact ID for a referenced record or preserve direct attributes."""
     result: dict[str, Any] = dict(reference.attrib)
     reference_id = reference.get("id")
     if not reference_id:
@@ -47,19 +48,23 @@ def parse_reference(
     if reference_path is None:
         return result
 
-    result.update(parse_record(reference_path, field_names))
-    return result
+    indexed_id = reference_path.parent.name
+    registry.setdefault(indexed_id, parse_record(reference_path, field_names))
+    return {"id": indexed_id}
 
 
 def parse_record(
     record_path: Path,
     field_names: dict[str, str],
+    registries: dict[str, dict[str, dict[str, Any]]] | None = None,
 ) -> dict[str, Any]:
     """Convert one record XML file into a JSON-compatible dictionary."""
     root = ET.parse(record_path).getroot()
     record: dict[str, Any] = {}
     editors: list[dict[str, Any]] = []
     sources: list[dict[str, Any]] = []
+    editor_registry = registries["Editors"] if registries else {}
+    source_registry = registries["Sources"] if registries else {}
 
     for field in root.findall("field"):
         field_id = field.get("id", "")
@@ -67,9 +72,13 @@ def parse_record(
         record[field_name] = field.get("value", "")
 
         for editor in field.findall("editor"):
-            editors.append(parse_reference(editor, record_path.parent, field_names))
+            editors.append(
+                parse_reference(editor, record_path.parent, field_names, editor_registry)
+            )
         for source in field.findall("source"):
-            sources.append(parse_reference(source, record_path.parent, field_names))
+            sources.append(
+                parse_reference(source, record_path.parent, field_names, source_registry)
+            )
 
     if editors:
         record["Editors"] = editors
@@ -79,21 +88,33 @@ def parse_record(
     return record
 
 
-def build_index(root_directory: Path, field_names: dict[str, str]) -> dict[str, dict[str, Any]]:
-    """Index every directory below root_directory that contains Info.xml."""
-    index: dict[str, dict[str, Any]] = {}
+def build_index(root_directory: Path, field_names: dict[str, str]) -> dict[str, Any]:
+    """Build records and deduplicated editor/source registries."""
+    registries: dict[str, dict[str, dict[str, Any]]] = {
+        "Editors": {},
+        "Sources": {},
+    }
+    records: dict[str, dict[str, Any]] = {}
     for info_path in sorted(root_directory.rglob("Info.xml")):
+        if "References" in info_path.relative_to(root_directory).parts:
+            continue
         folder_name = info_path.parent.name
-        if folder_name in index:
+        if folder_name in records:
             raise ValueError(f"Duplicate folder name in index: {folder_name}")
 
-        entry = parse_record(info_path, field_names)
+        entry = parse_record(info_path, field_names, registries)
         for record_name in ("Squeeze", "Inscription"):
             record_path = info_path.parent / f"{record_name}.xml"
             if record_path.is_file():
-                entry[record_name] = parse_record(record_path, field_names)
-        index[folder_name] = entry
-    return index
+                entry[record_name] = parse_record(record_path, field_names, registries)
+        records[folder_name] = entry
+    return {
+        "Collection": "",
+        "URL": "",
+        "Records": records,
+        "Editors": registries["Editors"],
+        "Sources": registries["Sources"],
+    }
 
 
 def main() -> None:
@@ -109,7 +130,7 @@ def main() -> None:
         json.dumps(index, indent=2, ensure_ascii=False) + "\n",
         encoding="utf-8",
     )
-    print(f"Indexed {len(index)} folders into {args.output}")
+    print(f"Indexed {len(index['Records'])} folders into {args.output}")
 
 
 if __name__ == "__main__":
