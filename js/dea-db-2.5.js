@@ -120,8 +120,10 @@ function loadDEAfields()
 	}
 }
 
-function DEAsource() //Constructor
+function DEAsource(path,insc_id) //Constructor
 {
+	this.path=path;
+	this.id=insc_id;
 	this.url='https://';
 	this.citation_id='';
 	this.citation=null;
@@ -130,7 +132,7 @@ function DEAsource() //Constructor
 }
 
 DEAsource.prototype.setURL=function(u){this.url=u;}
-DEAsource.prototype.setCID=function(i){this.citation_id=i;this.citation=new DEArecord('citations',this.citation_id);this.citation.load();}
+DEAsource.prototype.setCID=function(i){this.citation_id=i;this.citation=new DEArecord(this.path,this.id,this.citation_id,'citations');this.citation.load();}
 DEAsource.prototype.setNewFile=function(flag){this.newfile=flag;}
 DEAsource.prototype.setEdited=function(flag){this.edited=flag;}
 DEAsource.prototype.print=function(i)
@@ -236,13 +238,15 @@ DEAsource.prototype.updateAfterEdit=function()
 	}
 }
 
-function DEAeditor() //Constructor
+function DEAeditor(path,insc_id) //Constructor
 {
+	this.path=path;
+	this.id=insc_id;
 	this.editor_id='';
 	this.editor=null;
 }
 
-DEAeditor.prototype.setEID=function(i){this.editor_id=i;this.editor=new DEArecord('editors',this.editor_id);this.editor.load();}
+DEAeditor.prototype.setEID=function(i){this.editor_id=i;this.editor=new DEArecord(this.path,this.id,this.editor_id,'editors');this.editor.load();}
 DEAeditor.prototype.print=function(i)
 {
 	document.write(this.sprint(i));
@@ -459,7 +463,7 @@ DEArecord.prototype.handleLoadedFile=function(data,asynchronous,quickload)
 				var source=field.getElementsByTagName("source")[j];
 				if(source.getAttribute("url"))	
 				{
-					var s=new DEAsource();
+					var s=new DEAsource(this.path,this.id);
 					s.setURL(source.getAttribute("url"));	
 					new_entry.addSource(s);
 				}
@@ -467,7 +471,7 @@ DEArecord.prototype.handleLoadedFile=function(data,asynchronous,quickload)
 				{
 					if(!quickload)
 					{
-						var s=new DEAsource();
+						var s=new DEAsource(this.path,this.id);
 						s.setCID(source.getAttribute("id"));
 						new_entry.addSource(s);
 					}
@@ -483,7 +487,7 @@ DEArecord.prototype.handleLoadedFile=function(data,asynchronous,quickload)
 				{
 					if(!quickload)
 					{
-						var s=new DEAeditor();
+						var s=new DEAeditor(this.path,this.id);
 						s.setEID(editor.getAttribute("id"));
 						new_entry.addEditor(s);
 					}
@@ -549,7 +553,7 @@ DEArecord.prototype.handleLoadedFile=function(data,asynchronous,quickload)
 		}
 		else if(record_link.getAttribute("type")=="link")
 		{  
-			this.record_links[i]=new DEArecord("links",record_link.getAttribute("value"));
+			this.record_links[i]=new DEArecord(this.path,this.id,record_link.getAttribute("value"),"links");
 		}
 		else this.record_links[i]=new DEArecord("","");
 	}
