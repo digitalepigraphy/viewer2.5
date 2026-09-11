@@ -85,6 +85,15 @@ def parse_record(
     if sources:
         record["Sources"] = sources
 
+    for link in root.findall("record_link"):
+        value = link.get("value", "")
+        if not value.lower().endswith(".xml"):
+            continue
+        linked_path = resolve_record_path(value, record_path.parent)
+        if linked_path is None or linked_path == record_path:
+            continue
+        record[linked_path.stem] = parse_record(linked_path, field_names, registries)
+
     return record
 
 
@@ -103,10 +112,6 @@ def build_index(root_directory: Path, field_names: dict[str, str]) -> dict[str, 
             raise ValueError(f"Duplicate folder name in index: {folder_name}")
 
         entry = parse_record(info_path, field_names, registries)
-        for record_name in ("Squeeze", "Inscription"):
-            record_path = info_path.parent / f"{record_name}.xml"
-            if record_path.is_file():
-                entry[record_name] = parse_record(record_path, field_names, registries)
         records[folder_name] = entry
     return {
         "Collection": "",
