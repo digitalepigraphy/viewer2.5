@@ -10,8 +10,18 @@ import xml.etree.ElementTree as ET
 from pathlib import Path
 from typing import Any
 
+from PIL import Image
+
 
 FIELDS_URL = "https://digitalepigraphy.github.io/viewer2.5/fields.xml"
+THUMBNAIL_SIZE = 760
+THUMBNAIL_SOURCE_NAMES = (
+    "ImageLeft.png",
+    "ImageRight.png",
+    "ImageTop.png",
+    "ImageBottom.png",
+    "Heightmap.png",
+)
 
 
 def load_field_names(url: str = FIELDS_URL) -> dict[str, str]:
@@ -97,6 +107,24 @@ def parse_record(
     return record
 
 
+def make_thumbnail(record_directory: Path) -> Path | None:
+    """Create thumb.jpg in record_directory from the first available source image."""
+    source_path = next(
+        (record_directory / name for name in THUMBNAIL_SOURCE_NAMES
+         if (record_directory / name).is_file()),
+        None,
+    )
+    if source_path is None:
+        return None
+
+    thumbnail_path = record_directory / "thumb.jpg"
+    with Image.open(source_path) as image:
+        image = image.convert("RGB")
+        image.thumbnail((THUMBNAIL_SIZE, THUMBNAIL_SIZE), Image.LANCZOS)
+        image.save(thumbnail_path, "JPEG", quality=90)
+    return thumbnail_path
+
+
 def build_index(root_directory: Path, field_names: dict[str, str]) -> dict[str, Any]:
     """Build records and deduplicated editor/source registries."""
     registries: dict[str, dict[str, dict[str, Any]]] = {
@@ -113,6 +141,7 @@ def build_index(root_directory: Path, field_names: dict[str, str]) -> dict[str, 
 
         entry = parse_record(info_path, field_names, registries)
         records[folder_name] = entry
+        make_thumbnail(info_path.parent)
     return {
         "Collection": "",
         "URL": "",
