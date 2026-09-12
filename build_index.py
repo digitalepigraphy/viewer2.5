@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Build a JSON index from Ancyranum record XML files."""
+"""Build a JSON index from Digital Epigraphy and Archaeology record XML files."""
 
 from __future__ import annotations
 
@@ -125,7 +125,23 @@ def make_thumbnail(record_directory: Path) -> Path | None:
     return thumbnail_path
 
 
-def build_index(root_directory: Path, field_names: dict[str, str]) -> dict[str, Any]:
+def load_existing_metadata(output_path: Path) -> tuple[str, str]:
+    """Read Collection and URL values from a pre-existing index file, if any."""
+    if not output_path.is_file():
+        return "", ""
+    try:
+        existing = json.loads(output_path.read_text(encoding="utf-8"))
+    except (json.JSONDecodeError, OSError):
+        return "", ""
+    return existing.get("Collection", ""), existing.get("URL", "")
+
+
+def build_index(
+    root_directory: Path,
+    field_names: dict[str, str],
+    collection: str = "",
+    url: str = "",
+) -> dict[str, Any]:
     """Build records and deduplicated editor/source registries."""
     registries: dict[str, dict[str, dict[str, Any]]] = {
         "Editors": {},
@@ -143,8 +159,8 @@ def build_index(root_directory: Path, field_names: dict[str, str]) -> dict[str, 
         records[folder_name] = entry
         make_thumbnail(info_path.parent)
     return {
-        "Collection": "",
-        "URL": "",
+        "Collection": collection,
+        "URL": url,
         "Records": records,
         "Editors": registries["Editors"],
         "Sources": registries["Sources"],
@@ -159,7 +175,8 @@ def main() -> None:
     args = parser.parse_args()
 
     field_names = load_field_names(args.fields_url)
-    index = build_index(args.root.resolve(), field_names)
+    collection, url = load_existing_metadata(args.output)
+    index = build_index(args.root.resolve(), field_names, collection, url)
     args.output.write_text(
         json.dumps(index, indent=2, ensure_ascii=False) + "\n",
         encoding="utf-8",
