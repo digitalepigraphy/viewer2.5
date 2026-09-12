@@ -39,7 +39,18 @@ def load_field_names(url: str = FIELDS_URL) -> dict[str, str]:
 def resolve_record_path(record_path: str, record_directory: Path) -> Path | None:
     """Resolve a relative record reference such as ../References/Person/Info.xml."""
     candidate = (record_directory / record_path).resolve()
-    return candidate if candidate.is_file() else None
+    if candidate.is_file():
+        return candidate
+
+    reference_parts = tuple(
+        "References" if part == "Resources" else part
+        for part in Path(record_path).parts
+    )
+    if reference_parts == Path(record_path).parts:
+        return None
+
+    alternate = (record_directory / Path(*reference_parts)).resolve()
+    return alternate if alternate.is_file() else None
 
 
 def parse_reference(
@@ -67,9 +78,12 @@ def parse_record(
     record_path: Path,
     field_names: dict[str, str],
     registries: dict[str, dict[str, dict[str, Any]]] | None = None,
+    active_paths: frozenset[Path] | None = None,
 ) -> dict[str, Any]:
     """Convert one record XML file into a JSON-compatible dictionary."""
     root = ET.parse(record_path).getroot()
+    active_paths = frozenset() if active_paths is None else active_paths
+    current_paths = active_paths | {record_path}
     record: dict[str, Any] = {}
     editors: list[dict[str, Any]] = []
     sources: list[dict[str, Any]] = []
@@ -100,9 +114,20 @@ def parse_record(
         if not value.lower().endswith(".xml"):
             continue
         linked_path = resolve_record_path(value, record_path.parent)
-        if linked_path is None or linked_path == record_path:
+        if linked_path is None or linked_path in current_paths:
             continue
-        record[linked_path.stem] = parse_record(linked_path, field_names, registries)
+        linked_record = parse_record(
+            linked_path, field_names, registries, current_paths
+        )
+        nested_records = {
+            key: value
+            for key, value in linked_record.items()
+            if isinstance(value, dict)
+        }
+        for key, value in nested_records.items():
+            record[key] = value
+            del linked_record[key]
+        record[linked_path.stem] = linked_record
 
     return record
 
