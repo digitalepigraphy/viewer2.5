@@ -150,15 +150,15 @@ def make_thumbnail(record_directory: Path) -> Path | None:
     return thumbnail_path
 
 
-def load_existing_metadata(output_path: Path) -> tuple[str, str]:
-    """Read Collection and URL values from a pre-existing index file, if any."""
+def load_existing_metadata(output_path: Path) -> tuple[str, str, str]:
+    """Read Collection, URL and CiteAs values from a pre-existing index file, if any."""
     if not output_path.is_file():
-        return "", ""
+        return "", "", ""
     try:
         existing = json.loads(output_path.read_text(encoding="utf-8"))
     except (json.JSONDecodeError, OSError):
-        return "", ""
-    return existing.get("Collection", ""), existing.get("URL", "")
+        return "", "", ""
+    return existing.get("Collection", ""), existing.get("URL", ""), existing.get("CiteAs", "")
 
 
 def build_index(
@@ -166,6 +166,7 @@ def build_index(
     field_names: dict[str, str],
     collection: str = "",
     url: str = "",
+    cite_as: str = "",
 ) -> dict[str, Any]:
     """Build records and deduplicated editor/source registries."""
     registries: dict[str, dict[str, dict[str, Any]]] = {
@@ -186,6 +187,7 @@ def build_index(
     return {
         "Collection": collection,
         "URL": url,
+        "CiteAs": cite_as,
         "Records": records,
         "Editors": registries["Editors"],
         "Sources": registries["Sources"],
@@ -200,8 +202,8 @@ def main() -> None:
     args = parser.parse_args()
 
     field_names = load_field_names(args.fields_url)
-    collection, url = load_existing_metadata(args.output)
-    index = build_index(args.root.resolve(), field_names, collection, url)
+    collection, url, cite_as = load_existing_metadata(args.output)
+    index = build_index(args.root.resolve(), field_names, collection, url, cite_as)
     args.output.write_text(
         json.dumps(index, indent=2, ensure_ascii=False) + "\n",
         encoding="utf-8",
